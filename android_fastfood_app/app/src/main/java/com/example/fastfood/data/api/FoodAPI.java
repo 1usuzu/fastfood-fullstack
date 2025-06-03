@@ -1,6 +1,6 @@
-package com.example.fastfood;
+package com.example.fastfood.data.api;
 
-import com.example.fastfood.FoodModel;
+import com.example.fastfood.data.model.FoodModel;
 import java.util.List;
 
 import retrofit2.Call;

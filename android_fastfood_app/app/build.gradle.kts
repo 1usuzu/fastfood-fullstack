@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = false //Khi chuẩn bị phát hành ứng dụng, bạn nên đặt thành true để giảm kích thước APK và làm rối mã nguồn, giúp bảo vệ mã của bạn.
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
