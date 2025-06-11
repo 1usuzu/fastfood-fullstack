@@ -8,3 +8,6 @@ android_fastfood_app/app/build/
 # Node.js
 backend_fastfood_app/node_modules/
 backend_fastfood_app/.env
+
+# environment files
+.env
