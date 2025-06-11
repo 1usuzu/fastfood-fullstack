@@ -2,12 +2,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+// // Sử dụng dotenv để quản lý biến môi trường
+require('dotenv').config();
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const PORT = 3000; // Cổng mà server sẽ lắng nghe
+
+const dbUri = process.env.MONGODB_URI// Lấy URI kết nối MongoDB từ biến môi trường
+if (!dbUri) {
+  console.error('Vui lòng đặt biến môi trường MONGODB_URI với URI kết nối MongoDB của bạn.');
+  process.exit(1); // Dừng ứng dụng nếu không có URI
+}
+
 // Kết nối tới MongoDB
-mongoose.connect('mongodb://localhost:27017/fastfood_app_db')
+mongoose.connect(dbUri)
 .then(() => console.log('Đã kết nối thành công tới MongoDB!'))
 .catch(err => console.error('Lỗi kết nối MongoDB:', err));
 
@@ -36,6 +47,9 @@ name: {
 const Food = mongoose.model('Food', FoodSchema);
 
 // API Routes (Các đường dẫn để client tương tác)
+//...............................................
+
+
 
 // GET: Lấy danh sách tất cả món ăn
 app.get('/foods', async (req, res) => {
@@ -78,5 +92,4 @@ app.post('/foods', async (req, res) => {
   }
 });
 
-const PORT = 3000; // Cổng mà server sẽ lắng nghe
 app.listen(PORT, () => console.log(`Backend đang chạy tại http://localhost:${PORT}`));
