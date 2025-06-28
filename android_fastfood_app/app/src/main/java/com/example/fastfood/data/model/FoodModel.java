@@ -3,22 +3,17 @@ package com.example.fastfood.data.model;
 import com.google.gson.annotations.SerializedName;
 
 public class FoodModel {
-    // Sử dụng @SerializedName nếu tên biến trong Java khác với tên trường trong JSON từ API
-    @SerializedName("_id") // MongoDB thường dùng _id
+
+    @SerializedName("_id")
     private String id;
 
     private String name;
     private double price;
     private String imageUrl;
+    private String description;
 
-    // Các trường timestamps nếu backend có trả về
-    private String createdAt;
-    private String updatedAt;
+    public FoodModel() {}
 
-
-    public FoodModel() {} // Bắt buộc để Retrofit (Gson) chuyển JSON
-
-    // Getters
     public String getId() {
         return id;
     }
@@ -35,15 +30,10 @@ public class FoodModel {
         return imageUrl;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getDescription() {
+        return description;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    // Setters (Có thể không cần thiết nếu bạn chỉ nhận dữ liệu từ API và không sửa đổi trực tiếp)
     public void setId(String id) {
         this.id = id;
     }
@@ -60,11 +50,7 @@ public class FoodModel {
         this.imageUrl = imageUrl;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
