@@ -11,11 +11,11 @@ exports.getFoods = async (req, res) => {
 
 exports.createFood = async (req, res) => {
   try {
-    const { name, price, imageUrl } = req.body;
+    const { name, price, imageUrl, category } = req.body;
     if (!name || !price) {
       return res.status(400).json({ message: 'Thiếu tên hoặc giá món ăn.' });
     }
-    const food = await Food.create({ name, price, imageUrl });
+    const food = await Food.create({ name, price, imageUrl, category });
     res.status(201).json(food);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi thêm món ăn mới' });
