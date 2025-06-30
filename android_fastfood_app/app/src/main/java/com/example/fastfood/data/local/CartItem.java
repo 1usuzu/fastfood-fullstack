@@ -14,6 +14,7 @@ public class CartItem {
     public double price;
     public String imageUrl;
     public int quantity;
+    public String notes;
 
     // có thể thêm các constructor, getter, setter
 }

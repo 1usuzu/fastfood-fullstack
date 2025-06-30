@@ -2,10 +2,10 @@ package com.example.fastfood.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -23,9 +23,7 @@ import com.example.fastfood.data.model.FoodModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,21 +31,41 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListener {
+public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddListener {
 
+    private static final String ARG_CATEGORY = "category";
+    
     private RecyclerView rvFoods;
     private FoodAdapter foodAdapter;
     private FloatingActionButton fabCart;
+    private TextView tvTitle;
+    private ImageView btnBack;
     private AppDatabase database;
     private final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
-    private TextView tvSeeMore;
-    private List<String> categoryList = new ArrayList<>();
+    
+    private String selectedCategory;
     private List<FoodModel> allFoodItems = new ArrayList<>();
+
+    public static FoodListFragment newInstance(String category) {
+        FoodListFragment fragment = new FoodListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_CATEGORY, category);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            selectedCategory = getArguments().getString(ARG_CATEGORY);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_home, container, false);
+        return inflater.inflate(R.layout.fragment_food_list, container, false);
     }
 
     @Override
@@ -55,26 +73,24 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
         super.onViewCreated(view, savedInstanceState);
 
         database = AppDatabase.getDatabase(getContext());
-        rvFoods = view.findViewById(R.id.rv_foods); // Đảm bảo ID này đúng với layout
+        rvFoods = view.findViewById(R.id.rv_foods);
         fabCart = view.findViewById(R.id.fab_cart);
-        tvSeeMore = view.findViewById(R.id.tv_see_more);
+        tvTitle = view.findViewById(R.id.tv_title);
+        btnBack = view.findViewById(R.id.btn_back);
 
+        setupUI();
         setupRecyclerView();
         fetchData();
         setupCartButton();
-        handleSeeMoreClick();
+        setupBackButton();
     }
 
-    private void handleSeeMoreClick() {
-        tvSeeMore.setOnClickListener(v -> {
-            // Navigate to CategoryFragment
-            CategoryFragment categoryFragment = new CategoryFragment();
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, CategoryFragment.newInstance(new ArrayList<>(categoryList)))
-                    .addToBackStack(null)
-                    .commit();
-        });
+    private void setupUI() {
+        if (selectedCategory != null) {
+            tvTitle.setText("Danh mục: " + selectedCategory);
+        } else {
+            tvTitle.setText("Tất cả món ăn");
+        }
     }
 
     private void setupRecyclerView() {
@@ -90,26 +106,24 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
         });
     }
 
+    private void setupBackButton() {
+        btnBack.setOnClickListener(v -> {
+            // Navigate back to previous fragment
+            if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                getParentFragmentManager().popBackStack();
+            }
+        });
+    }
+
     private void fetchData() {
         Call<List<FoodModel>> call = RetrofitClient.getApi().getFoods();
         call.enqueue(new Callback<List<FoodModel>>() {
             @Override
             public void onResponse(@NonNull Call<List<FoodModel>> call, @NonNull Response<List<FoodModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    allFoodItems.clear();
                     allFoodItems.addAll(response.body());
-                    if (allFoodItems != null && !allFoodItems.isEmpty()) {
-                        foodAdapter.updateData(response.body());
-                        Set<String> categories = new HashSet<>();
-                        for (FoodModel item : allFoodItems) {
-                            if (item.getCategory() != null && !item.getCategory().isEmpty()) {
-                                categories.add(item.getCategory());
-                            }
-                        }
-                        categoryList.clear();
-                        categoryList.addAll(new ArrayList<>(categories));
-                    } else {
-                        Toast.makeText(getContext(), "Không có dữ liệu món ăn hoặc dữ liệu rỗng.", Toast.LENGTH_SHORT).show();
-                    }
+                    filterFoodsByCategory();
                 }
             }
 
@@ -118,6 +132,28 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
                 Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void filterFoodsByCategory() {
+        List<FoodModel> filteredFoods = new ArrayList<>();
+        
+        if (selectedCategory == null || selectedCategory.isEmpty()) {
+            // Show all foods if no category is selected
+            filteredFoods.addAll(allFoodItems);
+        } else {
+            // Filter foods by selected category
+            for (FoodModel food : allFoodItems) {
+                if (selectedCategory.equals(food.getCategory())) {
+                    filteredFoods.add(food);
+                }
+            }
+        }
+        
+        foodAdapter.updateData(filteredFoods);
+        
+        if (filteredFoods.isEmpty()) {
+            Toast.makeText(getContext(), "Không có món ăn nào trong danh mục này", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

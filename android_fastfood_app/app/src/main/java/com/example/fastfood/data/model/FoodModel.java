@@ -1,8 +1,9 @@
 package com.example.fastfood.data.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class FoodModel {
+public class FoodModel implements Serializable {
 
     @SerializedName("_id")
     private String id;
@@ -10,6 +11,7 @@ public class FoodModel {
     private String name;
     private double price;
     private String imageUrl;
+    private String category;
     private String description;
 
     public FoodModel() {}
@@ -30,6 +32,10 @@ public class FoodModel {
         return imageUrl;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -48,6 +54,10 @@ public class FoodModel {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void setDescription(String description) {

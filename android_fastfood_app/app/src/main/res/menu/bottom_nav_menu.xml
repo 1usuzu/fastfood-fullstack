@@ -3,16 +3,17 @@
 
     <item
         android:id="@+id/navigation_orders"
-        android:title="Đơn hàng" />
+        android:title="Đơn hàng"
+        android:icon="@android:drawable/ic_menu_agenda"/>
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home"
+        android:icon="@android:drawable/ic_menu_view"
         android:title="Trang chủ" />
 
     <item
         android:id="@+id/navigation_settings"
-        android:src="@android:drawable/ic_menu_manage"
+        android:icon="@android:drawable/ic_menu_manage"
         android:title="Cài đặt" />
 
 </menu>

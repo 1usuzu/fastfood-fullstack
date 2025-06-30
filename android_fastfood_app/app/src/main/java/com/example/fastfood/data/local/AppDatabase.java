@@ -5,7 +5,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {CartItem.class}, version = 1)
+@Database(entities = {CartItem.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract CartDao cartDao();
@@ -18,6 +18,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "fastfood_cart_db")
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

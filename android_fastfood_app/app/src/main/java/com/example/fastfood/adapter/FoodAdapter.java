@@ -19,6 +19,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     public interface OnItemAddListener {
         void onItemAdd(FoodModel food);
+        void onItemClick(FoodModel food);
     }
 
     private List<FoodModel> foodList;
@@ -73,7 +74,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
         void bind(final FoodModel food, final OnItemAddListener listener) {
             foodName.setText(food.getName());
-            foodDescription.setText(food.getDescription()); // Giả sử FoodModel có getDescription()
 
             String formattedPrice = String.format(Locale.GERMAN, "%,.0fđ", food.getPrice());
             foodPrice.setText(formattedPrice);
@@ -87,6 +87,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             buttonAddItem.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onItemAdd(food);
+                }
+            });
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(food);
                 }
             });
         }
