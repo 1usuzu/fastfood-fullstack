@@ -127,7 +127,7 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void bind(final CartItem item, final CartItemListener listener) {
             itemName.setText(item.name);
-            itemDescription.setText("Mô tả mặc định");
+            itemDescription.setText(item.notes);
             itemPrice.setText(String.format(Locale.GERMAN, "%,.0fđ", item.price));
             itemQuantity.setText(String.valueOf(item.quantity));
 

@@ -2,12 +2,12 @@ package com.example.fastfood.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -55,7 +55,7 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
         super.onViewCreated(view, savedInstanceState);
 
         database = AppDatabase.getDatabase(getContext());
-        rvFoods = view.findViewById(R.id.rv_foods); // Đảm bảo ID này đúng với layout
+        rvFoods = view.findViewById(R.id.rv_foods);
         fabCart = view.findViewById(R.id.fab_cart);
         tvSeeMore = view.findViewById(R.id.tv_see_more);
 
@@ -67,7 +67,6 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
 
     private void handleSeeMoreClick() {
         tvSeeMore.setOnClickListener(v -> {
-            // Navigate to CategoryFragment
             CategoryFragment categoryFragment = new CategoryFragment();
             getParentFragmentManager()
                     .beginTransaction()
@@ -96,26 +95,27 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
             @Override
             public void onResponse(@NonNull Call<List<FoodModel>> call, @NonNull Response<List<FoodModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    allFoodItems.clear();
                     allFoodItems.addAll(response.body());
-                    if (allFoodItems != null && !allFoodItems.isEmpty()) {
-                        foodAdapter.updateData(response.body());
-                        Set<String> categories = new HashSet<>();
-                        for (FoodModel item : allFoodItems) {
-                            if (item.getCategory() != null && !item.getCategory().isEmpty()) {
-                                categories.add(item.getCategory());
-                            }
+
+                    foodAdapter.updateData(response.body());
+
+                    Set<String> categories = new HashSet<>();
+                    for (FoodModel item : allFoodItems) {
+                        if (item.getCategory() != null && !item.getCategory().isEmpty()) {
+                            categories.add(item.getCategory());
                         }
-                        categoryList.clear();
-                        categoryList.addAll(new ArrayList<>(categories));
-                    } else {
-                        Toast.makeText(getContext(), "Không có dữ liệu món ăn hoặc dữ liệu rỗng.", Toast.LENGTH_SHORT).show();
                     }
+                    categoryList.clear();
+                    categoryList.addAll(new ArrayList<>(categories));
+                } else {
+                    Toast.makeText(getContext(), "Lỗi tải dữ liệu: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<FoodModel>> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -125,14 +125,15 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
         Toast.makeText(getContext(), "Đã thêm: " + food.getName(), Toast.LENGTH_SHORT).show();
 
         databaseExecutor.execute(() -> {
-            CartItem existingItem = database.cartDao().findItemById(food.getId());
+            // Lưu ý dùng String.valueOf(food.getId()) như trong code 2
+            CartItem existingItem = database.cartDao().findItemById(String.valueOf(food.getId()));
 
             if (existingItem != null) {
                 existingItem.quantity++;
                 database.cartDao().update(existingItem);
             } else {
                 CartItem newItem = new CartItem();
-                newItem.foodId = food.getId();
+                newItem.foodId = String.valueOf(food.getId());
                 newItem.name = food.getName();
                 newItem.price = food.getPrice();
                 newItem.imageUrl = food.getImageUrl();
@@ -144,7 +145,6 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
 
     @Override
     public void onItemClick(FoodModel food) {
-        // Navigate to FoodDetailFragment
         FoodDetailFragment foodDetailFragment = FoodDetailFragment.newInstance(food);
         getParentFragmentManager()
                 .beginTransaction()

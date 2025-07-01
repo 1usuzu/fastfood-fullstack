@@ -2,21 +2,27 @@ package com.example.fastfood.data.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+public class FoodModel implements Serializable{
 
-public class FoodModel implements Serializable {
+    @SerializedName("id")
+    private int id;
 
-    @SerializedName("_id")
-    private String id;
-
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("price")
     private double price;
+
+    @SerializedName("imageUrl")
     private String imageUrl;
-    private String category;
+
+    @SerializedName("description")
     private String description;
 
-    public FoodModel() {}
+    @SerializedName("category")
+    private String category;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -32,15 +38,15 @@ public class FoodModel implements Serializable {
         return imageUrl;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setId(String id) {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -56,11 +62,11 @@ public class FoodModel implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

@@ -26,12 +26,12 @@ import java.util.concurrent.Executors;
 public class FoodDetailFragment extends Fragment {
 
     private static final String ARG_FOOD = "food";
-    
+
     private ImageView imgFood, btnBack, btnDecrease, btnIncrease;
     private TextView tvFoodName, tvFoodDescription, tvFoodPrice, tvQuantity, tvTotalPrice;
     private EditText etNotes;
     private Button btnAddToCart;
-    
+
     private FoodModel food;
     private int quantity = 1;
     private AppDatabase database;
@@ -87,16 +87,16 @@ public class FoodDetailFragment extends Fragment {
         if (food != null) {
             tvFoodName.setText(food.getName());
             tvFoodDescription.setText(food.getDescription() != null ? food.getDescription() : "Mô tả món ăn ngon");
-            
+
             String formattedPrice = String.format(Locale.GERMAN, "%,.0fđ", food.getPrice());
             tvFoodPrice.setText(formattedPrice);
-            
+
             Glide.with(this)
                     .load(food.getImageUrl())
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_error)
                     .into(imgFood);
-            
+
             updateQuantityAndPrice();
         }
     }
@@ -134,9 +134,9 @@ public class FoodDetailFragment extends Fragment {
         if (food == null) return;
 
         String notes = etNotes.getText().toString().trim();
-        
+
         databaseExecutor.execute(() -> {
-            CartItem existingItem = database.cartDao().findItemById(food.getId());
+            CartItem existingItem = database.cartDao().findItemById(String.valueOf(food.getId()));
 
             if (existingItem != null) {
                 existingItem.quantity += quantity;
@@ -147,7 +147,7 @@ public class FoodDetailFragment extends Fragment {
                 database.cartDao().update(existingItem);
             } else {
                 CartItem newItem = new CartItem();
-                newItem.foodId = food.getId();
+                newItem.foodId = String.valueOf(food.getId());
                 newItem.name = food.getName();
                 newItem.price = food.getPrice();
                 newItem.imageUrl = food.getImageUrl();
@@ -159,10 +159,10 @@ public class FoodDetailFragment extends Fragment {
             // Show success message on main thread
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), 
-                        "Đã thêm " + quantity + " " + food.getName() + " vào giỏ hàng", 
-                        Toast.LENGTH_SHORT).show();
-                    
+                    Toast.makeText(getContext(),
+                            "Đã thêm " + quantity + " " + food.getName() + " vào giỏ hàng",
+                            Toast.LENGTH_SHORT).show();
+
                     // Navigate back after adding to cart
                     if (getParentFragmentManager().getBackStackEntryCount() > 0) {
                         getParentFragmentManager().popBackStack();

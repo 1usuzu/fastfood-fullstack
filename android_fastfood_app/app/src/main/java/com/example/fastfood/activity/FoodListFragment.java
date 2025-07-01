@@ -161,14 +161,14 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
         Toast.makeText(getContext(), "Đã thêm: " + food.getName(), Toast.LENGTH_SHORT).show();
 
         databaseExecutor.execute(() -> {
-            CartItem existingItem = database.cartDao().findItemById(food.getId());
+            CartItem existingItem = database.cartDao().findItemById(String.valueOf(food.getId()));
 
             if (existingItem != null) {
                 existingItem.quantity++;
                 database.cartDao().update(existingItem);
             } else {
                 CartItem newItem = new CartItem();
-                newItem.foodId = food.getId();
+                newItem.foodId = String.valueOf(food.getId());
                 newItem.name = food.getName();
                 newItem.price = food.getPrice();
                 newItem.imageUrl = food.getImageUrl();
