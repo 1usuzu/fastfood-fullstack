@@ -1,25 +1,28 @@
 package com.example.fastfood.data.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+public class FoodModel implements Serializable{
 
-public class FoodModel {
-    // Sử dụng @SerializedName nếu tên biến trong Java khác với tên trường trong JSON từ API
-    @SerializedName("_id") // MongoDB thường dùng _id
-    private String id;
+    @SerializedName("id")
+    private int id;
 
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("price")
     private double price;
+
+    @SerializedName("imageUrl")
     private String imageUrl;
 
-    // Các trường timestamps nếu backend có trả về
-    private String createdAt;
-    private String updatedAt;
+    @SerializedName("description")
+    private String description;
 
+    @SerializedName("category")
+    private String category;
 
-    public FoodModel() {} // Bắt buộc để Retrofit (Gson) chuyển JSON
-
-    // Getters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -35,16 +38,15 @@ public class FoodModel {
         return imageUrl;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getDescription() {
+        return description;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public String getCategory() {
+        return category;
     }
 
-    // Setters (Có thể không cần thiết nếu bạn chỉ nhận dữ liệu từ API và không sửa đổi trực tiếp)
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,11 +62,11 @@ public class FoodModel {
         this.imageUrl = imageUrl;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

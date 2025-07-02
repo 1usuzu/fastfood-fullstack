@@ -1,95 +1,40 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
-// // Sử dụng dotenv để quản lý biến môi trường
 require('dotenv').config();
+
+const express = require('express');
+const cors = require('cors');
+const sequelize = require('./config/database');
+const Food = require('./models/food');
+const Order = require('./models/order');
+const OrderItem = require('./models/orderItem');
+
+const foodRoutes = require('./routes/foodRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3000; // Cổng mà server sẽ lắng nghe
+const PORT = process.env.PORT || 3000;
 
-const dbUri = process.env.MONGODB_URI// Lấy URI kết nối MongoDB từ biến môi trường
-if (!dbUri) {
-  console.error('Vui lòng đặt biến môi trường MONGODB_URI với URI kết nối MongoDB của bạn.');
-  process.exit(1); // Dừng ứng dụng nếu không có URI
+// Thiết lập quan hệ nếu cần (ở đây chỉ là ví dụ, bạn có thể mở rộng)
+// Order.hasMany(OrderItem, { foreignKey: 'orderId' });
+// OrderItem.belongsTo(Order, { foreignKey: 'orderId' });
+
+// Kết nối và sync database
+async function setupDatabase() {
+  try {
+    await sequelize.authenticate();
+    console.log('>>> Đã kết nối thành công tới Supabase (PostgreSQL)! <<<');
+    await sequelize.sync({ alter: true });
+    console.log('Đã đồng bộ tất cả các model với database.');
+  } catch (error) {
+    console.error('Lỗi kết nối hoặc đồng bộ database:', error);
+  }
 }
+setupDatabase();
 
-// Kết nối tới MongoDB
-mongoose.connect(dbUri)
-.then(() => console.log('Đã kết nối thành công tới MongoDB!'))
-.catch(err => console.error('Lỗi kết nối MongoDB:', err));
-
-// Định nghĩa Schema (cấu trúc) cho món ăn trong MongoDB
-const FoodSchema = new mongoose.Schema({
-name: {
-    type: String,
-    required: [true, 'Tên món ăn là bắt buộc'], // Thêm validation: tên là bắt buộc
-    trim: true // Loại bỏ khoảng trắng thừa ở đầu và cuối
-  },
-  price: {
-    type: Number,
-    required: [true, 'Giá món ăn là bắt buộc'], // Thêm validation: giá là bắt buộc
-    min: [0, 'Giá không thể âm'] // Thêm validation: giá không được âm
-  },
-  imageUrl: {
-    type: String,
-    trim: true,
-    default: '' // Có thể đặt một URL ảnh mặc định nếu muốn
-  }
-}, {
-  timestamps: true // Tự động thêm trường createdAt và updatedAt
-});
-
-// Tạo Model từ Schema. Model này sẽ dùng để tương tác với collection 'foods' trong database.
-const Food = mongoose.model('Food', FoodSchema);
-
-// API Routes (Các đường dẫn để client tương tác)
-//...............................................
-
-
-
-// GET: Lấy danh sách tất cả món ăn
-app.get('/foods', async (req, res) => {
-  try {
-    const foods = await Food.find(); // Tìm tất cả các document trong collection 'foods'
-    res.json(foods); // Trả về danh sách món ăn dưới dạng JSON
-  } catch (error) {
-    console.error('Lỗi khi lấy danh sách món ăn:', error);
-    res.status(500).json({ message: 'Lỗi máy chủ khi lấy danh sách món ăn', error: error.message });
-  }
-});
-
-// POST: Thêm một món ăn mới
-app.post('/foods', async (req, res) => {
-  // Dữ liệu món ăn mới sẽ nằm trong req.body (ví dụ: { "name": "Gà rán", "price": 30000, "imageUrl": "..." })
-  try {
-    // Kiểm tra dữ liệu đầu vào cơ bản
-    if (!req.body.name || req.body.price == null) {
-      return res.status(400).json({ message: 'Tên và giá món ăn là bắt buộc.' });
-    }
-    if (typeof req.body.price !== 'number' || req.body.price < 0) {
-        return res.status(400).json({ message: 'Giá món ăn phải là một số không âm.' });
-    }
-
-    const newFood = new Food({
-      name: req.body.name,
-      price: req.body.price,
-      imageUrl: req.body.imageUrl
-    });
-
-    await newFood.save(); // Lưu món ăn mới vào database
-    res.status(201).json(newFood); // Trả về món ăn vừa tạo với mã trạng thái 201 (Created)
-  } catch (error) {
-    console.error('Lỗi khi thêm món ăn mới:', error);
-    // Nếu lỗi là do validation của Mongoose
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ message: 'Dữ liệu không hợp lệ', errors: error.errors });
-    }
-    res.status(500).json({ message: 'Lỗi máy chủ khi thêm món ăn mới', error: error.message });
-  }
-});
+// Routes
+app.use('/foods', foodRoutes);
+app.use('/orders', orderRoutes);
 
 app.listen(PORT, () => console.log(`Backend đang chạy tại http://localhost:${PORT}`));
