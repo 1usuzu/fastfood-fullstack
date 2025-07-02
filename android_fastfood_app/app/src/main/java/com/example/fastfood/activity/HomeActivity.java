@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fastfood.R;
 import com.example.fastfood.adapter.FoodAdapter;
+import com.example.fastfood.data.api.FoodAPI;
 import com.example.fastfood.data.api.RetrofitClient;
 import com.example.fastfood.data.local.AppDatabase;
 import com.example.fastfood.data.local.CartItem;
@@ -43,6 +44,7 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
     private TextView tvSeeMore;
     private List<String> categoryList = new ArrayList<>();
     private List<FoodModel> allFoodItems = new ArrayList<>();
+    private FoodAPI foodApi;
 
     @Nullable
     @Override
@@ -58,6 +60,7 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
         rvFoods = view.findViewById(R.id.rv_foods);
         fabCart = view.findViewById(R.id.fab_cart);
         tvSeeMore = view.findViewById(R.id.tv_see_more);
+        foodApi = RetrofitClient.getRetrofit().create(FoodAPI.class); // Khởi tạo FoodAPI đúng chuẩn
 
         setupRecyclerView();
         fetchData();
@@ -90,7 +93,7 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
     }
 
     private void fetchData() {
-        Call<List<FoodModel>> call = RetrofitClient.getApi().getFoods();
+        Call<List<FoodModel>> call = foodApi.getFoods(); // Gọi qua instance FoodAPI
         call.enqueue(new Callback<List<FoodModel>>() {
             @Override
             public void onResponse(@NonNull Call<List<FoodModel>> call, @NonNull Response<List<FoodModel>> response) {

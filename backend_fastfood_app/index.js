@@ -9,6 +9,7 @@ const OrderItem = require('./models/orderItem');
 
 const foodRoutes = require('./routes/foodRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 app.use(cors());
@@ -36,5 +37,6 @@ setupDatabase();
 // Routes
 app.use('/foods', foodRoutes);
 app.use('/orders', orderRoutes);
+app.use('/auth', authRoutes);
 
 app.listen(PORT, () => console.log(`Backend đang chạy tại http://localhost:${PORT}`));

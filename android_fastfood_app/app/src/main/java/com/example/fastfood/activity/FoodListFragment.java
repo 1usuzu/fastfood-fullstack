@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fastfood.R;
 import com.example.fastfood.adapter.FoodAdapter;
+import com.example.fastfood.data.api.FoodAPI;
 import com.example.fastfood.data.api.RetrofitClient;
 import com.example.fastfood.data.local.AppDatabase;
 import com.example.fastfood.data.local.CartItem;
@@ -34,7 +35,7 @@ import retrofit2.Response;
 public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddListener {
 
     private static final String ARG_CATEGORY = "category";
-    
+
     private RecyclerView rvFoods;
     private FoodAdapter foodAdapter;
     private FloatingActionButton fabCart;
@@ -42,9 +43,10 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
     private ImageView btnBack;
     private AppDatabase database;
     private final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
-    
+
     private String selectedCategory;
     private List<FoodModel> allFoodItems = new ArrayList<>();
+    private FoodAPI foodApi;
 
     public static FoodListFragment newInstance(String category) {
         FoodListFragment fragment = new FoodListFragment();
@@ -77,6 +79,7 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
         fabCart = view.findViewById(R.id.fab_cart);
         tvTitle = view.findViewById(R.id.tv_title);
         btnBack = view.findViewById(R.id.btn_back);
+        foodApi = RetrofitClient.getRetrofit().create(FoodAPI.class); // Khởi tạo FoodAPI đúng chuẩn
 
         setupUI();
         setupRecyclerView();
@@ -116,7 +119,7 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
     }
 
     private void fetchData() {
-        Call<List<FoodModel>> call = RetrofitClient.getApi().getFoods();
+        Call<List<FoodModel>> call = foodApi.getFoods(); // Gọi qua instance FoodAPI
         call.enqueue(new Callback<List<FoodModel>>() {
             @Override
             public void onResponse(@NonNull Call<List<FoodModel>> call, @NonNull Response<List<FoodModel>> response) {
@@ -136,7 +139,7 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
 
     private void filterFoodsByCategory() {
         List<FoodModel> filteredFoods = new ArrayList<>();
-        
+
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             // Show all foods if no category is selected
             filteredFoods.addAll(allFoodItems);
@@ -148,9 +151,9 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
                 }
             }
         }
-        
+
         foodAdapter.updateData(filteredFoods);
-        
+
         if (filteredFoods.isEmpty()) {
             Toast.makeText(getContext(), "Không có món ăn nào trong danh mục này", Toast.LENGTH_SHORT).show();
         }

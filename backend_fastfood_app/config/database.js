@@ -11,6 +11,7 @@ if (!dbUrl) {
 const sequelize = new Sequelize(dbUrl, {
   dialect: 'postgres',
   protocol: 'postgres',
+  logging: false,
   dialectOptions: {
     ssl: {
       require: true,

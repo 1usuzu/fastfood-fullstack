@@ -104,8 +104,13 @@ public class CartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        TextView textCustomerName;
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+            textCustomerName = itemView.findViewById(R.id.text_customer_name);
+            android.content.SharedPreferences prefs = itemView.getContext().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE);
+            String userName = prefs.getString("user_name", "Khách hàng");
+            textCustomerName.setText("Anh/chị: " + userName);
         }
     }
     static class FoodItemViewHolder extends RecyclerView.ViewHolder {
