@@ -26,5 +26,29 @@
             android:name=".activity.CartActivity"
             android:exported="true"
             android:label="Giỏ hàng" />
+        <activity
+            android:name=".activity.VisaDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PaymentAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.PaymentAccountAdapter"
+            android:exported="false"
+            android:theme="@style/Theme.Fastfood_app" />
+        <activity
+            android:name=".activity.SupportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.InfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:exported="false"
+            android:label="Setting"/>
+
     </application>
 </manifest>

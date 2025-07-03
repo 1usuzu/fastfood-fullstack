@@ -20,6 +20,7 @@ android {
         release {
             isMinifyEnabled = false //Khi chuẩn bị phát hành ứng dụng, bạn nên đặt thành true để giảm kích thước APK và làm rối mã nguồn, giúp bảo vệ mã của bạn.
             proguardFiles(
+
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
@@ -39,6 +40,11 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation ("com.google.android.material:material:1.11.0")
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

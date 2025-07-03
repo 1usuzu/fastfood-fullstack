@@ -5,6 +5,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import com.example.fastfood.fragment.SettingFragment;
 
 import com.example.fastfood.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,7 +24,10 @@ public class MainActivity extends AppCompatActivity {
             loadFragment(new HomeActivity());
             bottomNavView.setSelectedItemId(R.id.navigation_home);
         }
-
+        if (savedInstanceState == null) {
+            loadFragment(new SettingFragment());
+            bottomNavView.setSelectedItemId(R.id.navigation_settings);
+        }
         bottomNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.navigation_orders) {
                     // selectedFragment = new OrdersFragment(); // TODO: Tạo Fragment này
                 } else if (itemId == R.id.navigation_settings) {
-                    // selectedFragment = new SettingsFragment(); // TODO: Tạo Fragment này
+                    selectedFragment = new SettingFragment(); // TODO: Tạo Fragment này
                 }
 
                 if (selectedFragment != null) {
