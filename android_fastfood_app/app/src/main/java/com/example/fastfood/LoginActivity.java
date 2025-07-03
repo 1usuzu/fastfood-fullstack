@@ -1,11 +1,16 @@
 package com.example.fastfood;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     ImageView ivBack;
     LinearLayout llGoToRegister;
     View btnLogin;
+    TextView tvForgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,12 @@ public class LoginActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.iv_back);
         llGoToRegister = findViewById(R.id.ll_go_to_register);
         btnLogin = findViewById(R.id.btn_login_submit);
+        tvForgotPassword = findViewById(R.id.tv_forgot_password);
+
+        // Gán chuỗi "Bạn quên mật khẩu? Quên mật khẩu" với phần "Quên mật khẩu" in đậm
+        SpannableString span = new SpannableString("Bạn quên mật khẩu? Quên mật khẩu");
+        span.setSpan(new StyleSpan(Typeface.BOLD), 21, 35, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvForgotPassword.setText(span);
 
         ivBack.setOnClickListener(v -> finish());
 

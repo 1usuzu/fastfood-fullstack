@@ -9,5 +9,19 @@ public class UserLoginRequest {
         this.password = password;
     }
 
-    // Getter & Setter nếu cần
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

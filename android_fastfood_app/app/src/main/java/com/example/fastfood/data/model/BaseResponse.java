@@ -1,6 +1,6 @@
 package com.example.fastfood.data.model;
 
-public class ApiResponse {
+public class BaseResponse {
     private String message;
     private boolean success;
 
