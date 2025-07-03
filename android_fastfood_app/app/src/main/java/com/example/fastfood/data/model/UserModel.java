@@ -1,6 +1,6 @@
 package com.example.fastfood.data.model;
 
-public class User {
+public class UserModel {
     private int id;
     private String name;
     private String phone;

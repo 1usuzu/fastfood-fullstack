@@ -3,7 +3,7 @@ package com.example.fastfood.data.model;
 public class LoginResponse {
     private String message;
     private String token;
-    private User user;
+    private UserModel user;
 
     public String getToken() {
         return token;
@@ -11,7 +11,7 @@ public class LoginResponse {
     public String getMessage() {
         return message;
     }
-    public User getUser() {
+    public UserModel getUser() {
         return user;
     }
 }

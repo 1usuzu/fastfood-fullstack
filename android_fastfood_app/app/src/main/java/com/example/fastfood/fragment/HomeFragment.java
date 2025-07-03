@@ -1,4 +1,4 @@
-package com.example.fastfood.activity;
+package com.example.fastfood.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fastfood.R;
+import com.example.fastfood.activity.CartActivity;
 import com.example.fastfood.adapter.FoodAdapter;
 import com.example.fastfood.data.api.FoodAPI;
 import com.example.fastfood.data.api.RetrofitClient;
@@ -34,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListener {
+public class HomeFragment extends Fragment implements FoodAdapter.OnItemAddListener {
 
     private RecyclerView rvFoods;
     private FoodAdapter foodAdapter;

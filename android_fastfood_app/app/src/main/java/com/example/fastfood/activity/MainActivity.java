@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.fastfood.R;
+import com.example.fastfood.fragment.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
 
         if (savedInstanceState == null) {
-            loadFragment(new HomeActivity());
+            loadFragment(new HomeFragment());
             bottomNavView.setSelectedItemId(R.id.navigation_home);
         }
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
 
                 if (itemId == R.id.navigation_home) {
-                    selectedFragment = new HomeActivity();
+                    selectedFragment = new HomeFragment();
                 } else if (itemId == R.id.navigation_orders) {
                     // selectedFragment = new OrdersFragment(); // TODO: Tạo Fragment này
                 } else if (itemId == R.id.navigation_settings) {

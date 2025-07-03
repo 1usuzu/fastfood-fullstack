@@ -1,4 +1,4 @@
-package com.example.fastfood.activity;
+package com.example.fastfood.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
