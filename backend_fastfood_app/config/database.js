@@ -1,3 +1,4 @@
+// config/db.js
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
@@ -16,7 +17,8 @@ const sequelize = new Sequelize(dbUrl, {
       require: true,
       rejectUnauthorized: false
     }
-  }
+  },
+  logging: false,
 });
 
 module.exports = sequelize;

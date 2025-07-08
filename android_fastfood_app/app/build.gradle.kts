@@ -33,6 +33,8 @@ android {
 
 dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     val room_version = "2.6.1"

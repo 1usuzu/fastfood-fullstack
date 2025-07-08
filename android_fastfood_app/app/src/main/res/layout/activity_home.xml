@@ -18,20 +18,24 @@
             android:layout_height="?attr/actionBarSize"
             android:background="#E53935"
             app:layout_scrollFlags="scroll|enterAlways|snap">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <ImageButton
                     android:id="@+id/button_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_search"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:tint="@android:color/white"
+                    android:contentDescription="Tìm kiếm"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:contentDescription="Tìm kiếm" />
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
                 <TextView
                     android:id="@+id/text_logo"
                     android:layout_width="wrap_content"
@@ -48,19 +52,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
                 <ImageButton
                     android:id="@+id/button_profile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_person"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:tint="@android:color/white"
+                    android:contentDescription="Tài khoản"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:contentDescription="Tài khoản" />
+                    app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -85,21 +91,23 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:padding="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:text="Gợi ý cho bạn"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_alignParentStart="true"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/tv_see_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:text="Xem thêm >>>"
-                android:textColor="#0066CC"
-                android:layout_alignParentEnd="true"/>
+                android:textColor="#0066CC" />
         </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -110,8 +118,8 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_food"
-        tools:itemCount="10"/>
+        tools:itemCount="10"
+        tools:listitem="@layout/item_food" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_cart"
@@ -119,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_shopping_cart"
-        android:contentDescription="Giỏ hàng" />
+        android:contentDescription="Giỏ hàng"
+        app:srcCompat="@drawable/ic_shopping_cart" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

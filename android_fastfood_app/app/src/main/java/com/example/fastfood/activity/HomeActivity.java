@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fastfood.R;
 import com.example.fastfood.adapter.FoodAdapter;
+import com.example.fastfood.data.api.FoodAPI;
 import com.example.fastfood.data.api.RetrofitClient;
 import com.example.fastfood.data.local.AppDatabase;
 import com.example.fastfood.data.local.CartItem;
 import com.example.fastfood.data.model.FoodModel;
+import com.example.fastfood.fragment.CategoryFragment;
+import com.example.fastfood.fragment.FoodDetailFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -67,10 +70,11 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
 
     private void handleSeeMoreClick() {
         tvSeeMore.setOnClickListener(v -> {
-            CategoryFragment categoryFragment = new CategoryFragment();
-            getParentFragmentManager()
+            CategoryFragment categoryFragment = CategoryFragment.newInstance(new ArrayList<>(categoryList));
+            requireActivity()
+                    .getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.nav_host_fragment, CategoryFragment.newInstance(new ArrayList<>(categoryList)))
+                    .replace(R.id.nav_host_fragment, categoryFragment)
                     .addToBackStack(null)
                     .commit();
         });
@@ -90,7 +94,7 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
     }
 
     private void fetchData() {
-        Call<List<FoodModel>> call = RetrofitClient.getApi().getFoods();
+        Call<List<FoodModel>> call = RetrofitClient.getApi(FoodAPI.class).getFoods();
         call.enqueue(new Callback<List<FoodModel>>() {
             @Override
             public void onResponse(@NonNull Call<List<FoodModel>> call, @NonNull Response<List<FoodModel>> response) {
@@ -125,7 +129,6 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
         Toast.makeText(getContext(), "Đã thêm: " + food.getName(), Toast.LENGTH_SHORT).show();
 
         databaseExecutor.execute(() -> {
-            // Lưu ý dùng String.valueOf(food.getId()) như trong code 2
             CartItem existingItem = database.cartDao().findItemById(String.valueOf(food.getId()));
 
             if (existingItem != null) {
@@ -146,7 +149,8 @@ public class HomeActivity extends Fragment implements FoodAdapter.OnItemAddListe
     @Override
     public void onItemClick(FoodModel food) {
         FoodDetailFragment foodDetailFragment = FoodDetailFragment.newInstance(food);
-        getParentFragmentManager()
+        requireActivity()
+                .getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment, foodDetailFragment)
                 .addToBackStack(null)

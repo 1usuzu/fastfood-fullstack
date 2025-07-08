@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#E53935</color>
+    <color name="primary">#FF5722</color> <!-- Màu đỏ cam (hoặc chọn mã màu bạn muốn) -->
+
+    <!-- Màu sắc cho ứng dụng -->
+    <color name="brand_red">#D32F2F</color>
+    <color name="button_yellow">#FFB300</color>
+    <color name="text_color_primary">#212121</color>
+    <color name="text_color_secondary">#757575</color>
 </resources>
