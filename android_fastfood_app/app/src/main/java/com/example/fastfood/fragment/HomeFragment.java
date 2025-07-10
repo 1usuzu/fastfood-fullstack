@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment implements FoodAdapter.OnItemAddListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_home, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment implements FoodAdapter.OnItemAddListe
         rvFoods = view.findViewById(R.id.rv_foods);
         fabCart = view.findViewById(R.id.fab_cart);
         tvSeeMore = view.findViewById(R.id.tv_see_more);
+
         foodApi = RetrofitClient.getRetrofit().create(FoodAPI.class); // Khởi tạo FoodAPI đúng chuẩn
 
         setupRecyclerView();

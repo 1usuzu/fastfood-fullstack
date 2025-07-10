@@ -4,7 +4,6 @@ public class LoginResponse {
     private String message;
     private String token;
     private UserModel user;
-
     public String getToken() {
         return token;
     }

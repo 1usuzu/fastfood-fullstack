@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.fastfood.R;
 import com.example.fastfood.fragment.HomeFragment;
+import com.example.fastfood.fragment.OrderHistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -34,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
                 if (itemId == R.id.navigation_home) {
                     selectedFragment = new HomeFragment();
                 } else if (itemId == R.id.navigation_orders) {
-                    // selectedFragment = new OrdersFragment(); // TODO: Tạo Fragment này
+                    selectedFragment = new OrderHistoryFragment();
                 } else if (itemId == R.id.navigation_settings) {
-                    // selectedFragment = new SettingsFragment(); // TODO: Tạo Fragment này
+                    // selectedFragment = new SettingsFragment();
                 }
 
                 if (selectedFragment != null) {
