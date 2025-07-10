@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fastfood.R;
 import com.example.fastfood.adapter.FoodAdapter;
+// THÊM IMPORT
+import com.example.fastfood.data.api.SessionManager;
 import com.example.fastfood.data.api.FoodAPI;
 import com.example.fastfood.data.model.FoodModel;
 
@@ -32,9 +34,15 @@ public class OrderHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // ✅ BỔ SUNG ĐOẠN KIỂM TRA ĐĂNG NHẬP VÀO ĐÂY
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        sessionManager.checkLogin();
+
+        // --- Cấu trúc code cũ của bạn được giữ nguyên từ đây trở xuống ---
         setContentView(R.layout.activity_order_history);
 
-        recyclerViewFoods = findViewById(R.id.rv_order_history); // ✅ Sửa lại ID này
+        recyclerViewFoods = findViewById(R.id.rv_order_history);
         recyclerViewFoods.setLayoutManager(new LinearLayoutManager(this));
 
         foodModelList = new ArrayList<>();

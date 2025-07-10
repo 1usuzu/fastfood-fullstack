@@ -23,8 +23,7 @@ public interface APIService {
     // Đăng nhập
     @Headers("Content-Type: application/json")
     @POST("/login")
-    Call<ApiResponse> loginUser(@Body User user);
-
+    Call<ApiResponse> loginUser(@Body com.example.fastfood.data.model.UserLoginRequest user);
     // Gửi OTP quên mật khẩu
     @Headers("Content-Type: application/json")
     @POST("/forgot-password")

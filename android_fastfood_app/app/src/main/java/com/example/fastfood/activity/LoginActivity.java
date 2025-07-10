@@ -1,3 +1,4 @@
+// Vị trí: com.example.fastfood.activity/LoginActivity.java
 package com.example.fastfood.activity;
 
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fastfood.R;
+import com.example.fastfood.data.api.SessionManager;
 import com.example.fastfood.data.api.RetrofitClient;
 import com.example.fastfood.data.api.UserApi;
 import com.example.fastfood.data.model.UserLoginRequest;
@@ -38,6 +40,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // SessionManager để kiểm tra nếu đã đăng nhập thì vào thẳng màn hình chính
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        if (sessionManager.isLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, OrderHistoryActivity.class);
+            startActivity(intent);
+            finish();
+            return; // Dừng hàm onCreate ở đây để không chạy code thừa
+        }
+
         edtPhone = findViewById(R.id.edt_phone);
         edtPassword = findViewById(R.id.edt_password);
         ivBack = findViewById(R.id.iv_back);
@@ -45,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login_submit);
         tvForgotPassword = findViewById(R.id.tv_forgot_password);
 
-        // Làm nổi bật chữ "Quên mật khẩu"
         SpannableString span = new SpannableString("Bạn quên mật khẩu? Quên mật khẩu");
         span.setSpan(new StyleSpan(Typeface.BOLD), 21, 35, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvForgotPassword.setText(span);
@@ -72,13 +82,20 @@ public class LoginActivity extends AppCompatActivity {
             api.loginUser(loginRequest).enqueue(new Callback<UserResponse>() {
                 @Override
                 public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 
-                        // ✅ CHUYỂN SANG MÀN HÌNH CHÍNH
+                        // Lấy token
+                        String token = response.body().getToken();
+
+                        // Tạo và lưu session chỉ với token
+                        SessionManager sessionManager = new SessionManager(getApplicationContext());
+                        sessionManager.createLoginSession(token);
+
+                        // Chuyển sang màn hình chính
                         Intent intent = new Intent(LoginActivity.this, OrderHistoryActivity.class);
                         startActivity(intent);
-                        finish(); // Không quay lại màn login khi bấm Back
+                        finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Sai SĐT hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                     }
