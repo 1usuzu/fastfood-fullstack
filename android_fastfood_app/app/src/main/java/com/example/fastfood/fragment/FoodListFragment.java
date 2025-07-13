@@ -80,7 +80,8 @@ public class FoodListFragment extends Fragment implements FoodAdapter.OnItemAddL
         fabCart = view.findViewById(R.id.fab_cart);
         tvTitle = view.findViewById(R.id.tv_title);
         btnBack = view.findViewById(R.id.btn_back);
-        FoodAPI api = RetrofitClient.getApi(); // Khởi tạo FoodAPI đúng chuẩn
+
+        foodApi = RetrofitClient.getApi();
 
         setupUI();
         setupRecyclerView();
