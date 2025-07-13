@@ -13,7 +13,7 @@
 
 2. **Cài đặt các package cần thiết:**
    ```bash
-   npm install express sequelize pg pg-hstore bcryptjs jsonwebtoken cors dotenv
+   npm install express sequelize pg pg-hstore bcryptjs jsonwebtoken cors dotenv moment qs
    ```
    - `express`: Framework web
    - `sequelize`: ORM cho Node.js
