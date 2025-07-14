@@ -7,7 +7,7 @@
 
 1. **Clone dự án:**
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/1usuzu/fastfood-fullstack.git
    cd backend_fastfood_app
    ```
 
@@ -18,16 +18,18 @@
    - `express`: Framework web
    - `sequelize`: ORM cho Node.js
    - `pg` và `pg-hstore`: Driver cho PostgreSQL
+   - `moment qs`: Cho vnpay
    - `bcryptjs`, `jsonwebtoken`, `cors`, `dotenv`: Các thư viện hỗ trợ khác
 
 3. **Tạo file `.env`**
-   Tạo file `.env` ở thư mục gốc với nội dung ví dụ:
+   Tạo file `.env` ở thư mục gốc với nội dung gồm:
    ```env
-   DATABASE_URL=postgres://<user>:<password>@<host>:<port>/<dbname>
-   JWT_SECRET=your_jwt_secret
-   PORT=3000
+   DATABASE_URL
+   VNP_TMNCODE
+   VNP_HASHSECRET
+   VNP_URL
+   VNP_RETURNURL
    ```
-   - Chỉ cần `DATABASE_URL` cho PostgreSQL.
 
 4. **Chạy server:**
    ```bash
@@ -46,8 +48,8 @@
 
 ## Cấu trúc thư mục
 - `index.js` — File chính khởi động server
-- `models/` — Định nghĩa các model (User, Food, ...)
-- `routes/` — Định nghĩa các route (nếu có)
+- `models/` — Định nghĩa các model
+- `routes/` — Định nghĩa các route
 - `config/database.js` — Kết nối cơ sở dữ liệu PostgreSQL (Sequelize)
 
 ## Thư viện sử dụng
@@ -59,6 +61,7 @@
 - jsonwebtoken
 - cors
 - dotenv
+- moment qs
 
 ## Ghi chú
 - Đảm bảo đã cài Node.js >= 14
