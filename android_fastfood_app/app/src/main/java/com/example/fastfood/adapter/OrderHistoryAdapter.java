@@ -3,6 +3,7 @@ package com.example.fastfood.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +20,16 @@ import java.util.TimeZone;
 
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.OrderViewHolder> {
     private List<Order> orderList;
+    private OnReorderClickListener reorderClickListener;
 
-    public OrderHistoryAdapter(List<Order> orderList) {
+
+    public interface OnReorderClickListener {
+        void onReorderClick(Order order);
+    }
+
+    public OrderHistoryAdapter(List<Order> orderList, OnReorderClickListener listener) {
         this.orderList = orderList;
+        this.reorderClickListener = listener;
     }
 
     @NonNull
@@ -34,7 +42,8 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
-        holder.bind(order);
+        // Truyền listener vào hàm bind để gán sự kiện click
+        holder.bind(order, reorderClickListener);
     }
 
     @Override
@@ -43,24 +52,26 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        // ÁNH XẠ ĐÚNG VỚI CÁC ID MỚI
         TextView tvOrderId, tvOrderStatus, tvOrderDate, tvOrderItems, tvOrderTotal;
+        Button btnReorder;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            // SỬ DỤNG ĐÚNG CÁC ID TỪ LAYOUT
             tvOrderId = itemView.findViewById(R.id.tv_order_id);
             tvOrderStatus = itemView.findViewById(R.id.tv_order_status);
             tvOrderDate = itemView.findViewById(R.id.tv_order_date);
             tvOrderItems = itemView.findViewById(R.id.tv_order_items);
             tvOrderTotal = itemView.findViewById(R.id.tv_order_total);
+            btnReorder = itemView.findViewById(R.id.btn_reorder);
         }
 
-        void bind(Order order) {
+        /**
+         * Cập nhật hàm bind để gán sự kiện click cho nút "Đặt lại"
+         */
+        void bind(final Order order, final OnReorderClickListener listener) {
             tvOrderId.setText("Mã đơn hàng #" + order.getId());
             tvOrderStatus.setText(order.getStatus());
             tvOrderTotal.setText("Tổng tiền: " + String.format(Locale.GERMAN, "%,.0fđ", order.getTotalPrice()));
-
             tvOrderDate.setText("Ngày đặt: " + formatIsoDate(order.getCreatedAt()));
 
             StringBuilder itemsBuilder = new StringBuilder();
@@ -73,6 +84,13 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                 }
             }
             tvOrderItems.setText("Sản phẩm: " + itemsBuilder.toString());
+
+            // Gán sự kiện click cho nút "Đặt lại"
+            btnReorder.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onReorderClick(order);
+                }
+            });
         }
 
         private String formatIsoDate(String isoDate) {
