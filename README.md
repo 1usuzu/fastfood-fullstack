@@ -150,3 +150,13 @@ Chạy ứng dụng:
 | POST        | `/foods`       | Thêm món mới (cần xác thực)  |
 | GET         | `/orders`      | Xem lịch sử đặt hàng         |
 | POST        | `/orders`      | Đặt hàng                     |
+| GET         | `/api/users/:id`          | Lấy thông tin chi tiết của một người dùng     |
+| PUT         | `/api/users/:id`          | Cập nhật thông tin của một người dùng         |
+| POST        | `/api/users/change-password` | Đổi mật khẩu khi đã đăng nhập              |
+| GET         | `/api/payment-account/:userPhone`        | Lấy danh sách thẻ thanh toán          |
+| POST        | `/api/payment-account/add`               | Thêm một thẻ thanh toán mới           |
+| DELETE      | `/api/payment-account/delete/:id`        | Xóa một thẻ thanh toán                |
+| POST        | `/api/payment/create_payment_url` | Tạo URL để thanh toán qua cổng VNPay            |
+| GET         | `/api/payment/vnpay_return`       | Nhận kết quả trả về từ cổng VNPay               |
+| POST        | `/api/support-request` | Gửi yêu cầu hỗ trợ từ khách hàng      |
+
