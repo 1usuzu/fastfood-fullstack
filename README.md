@@ -52,7 +52,7 @@ Một ứng dụng đặt đồ ăn nhanh full-stack với frontend là ứng d�
 
 ---
 
-## 📦 Cấu trúc thư mục
+## Cấu trúc thư mục
 
 ```
 fastfood-fullstack/
@@ -69,7 +69,7 @@ fastfood-fullstack/
 
 ---
 
-## ⚙️ Cài đặt và chạy dự án
+## Cài đặt và chạy dự án
 
 ### 1. Clone repository
 
@@ -110,13 +110,13 @@ Chạy server:
 node index.js
 ```
 
-> ✅ Server chạy ở `http://localhost:3000`
+> Server chạy ở `http://localhost:3000`
 
 ---
 
 ### 3. Cài đặt Frontend (Android)
 
-> 📱 Cần cài Android Studio
+> Cần cài Android Studio
 
 - Mở Android Studio → chọn "Open" → chọn thư mục `android_fastfood_app`
 
@@ -134,7 +134,7 @@ Chạy ứng dụng:
 
 ---
 
-## 🔌 Các API chính
+## Các API chính
 
 | Phương thức | Endpoint      | Chức năng                    |
 |-------------|----------------|------------------------------|
