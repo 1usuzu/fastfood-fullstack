@@ -1,128 +1,146 @@
-Ứng dụng Đặt đồ ăn nhanh (Full-stack)
+# Ứng dụng Đặt Đồ Ăn Nhanh (FastFood Fullstack)
 
-Frontend: Một ứng dụng Android gốc được phát triển bằng Java.
+Một ứng dụng đặt đồ ăn nhanh full-stack với frontend là ứng dụng Android gốc (Java) và backend là API RESTful xây dựng bằng Node.js và Express. Ứng dụng cho phép người dùng đăng ký, đăng nhập, xem và lọc món ăn, quản lý giỏ hàng, đặt hàng và xem lịch sử đơn hàng. Dữ liệu được đồng bộ hóa an toàn giữa ứng dụng và máy chủ.
 
-Backend: Một máy chủ RESTful API được xây dựng bằng Node.js và Express.
+---
 
-Ứng dụng cho phép người dùng đăng ký, đăng nhập, duyệt xem và lọc các món ăn, quản lý giỏ hàng, đặt hàng và theo dõi lịch sử đơn hàng của mình. Toàn bộ dữ liệu được đồng bộ hóa một cách an toàn giữa ứng dụng Android và máy chủ backend.
+## Tính năng chính
 
-Tính năng chính
-Xác thực người dùng: Đăng ký, đăng nhập, ghi nhớ đăng nhập và chức năng quên mật khẩu. Hệ thống sử dụng JWT (JSON Web Token) để bảo mật.
+### Xác thực người dùng
+- Đăng ký và đăng nhập
+- Quản lý phiên với JWT
+- Quên mật khẩu
+- Mã hóa mật khẩu bằng bcryptjs
 
-Quản lý món ăn: Xem danh sách món ăn, lọc theo danh mục, xem chi tiết từng món.
+###  Quản lý món ăn
+- Xem danh sách món ăn
+- Lọc theo danh mục
+- Xem chi tiết món
 
-Giỏ hàng thông minh: Thêm món ăn vào giỏ, tùy chỉnh số lượng, thêm ghi chú cho món.
+### Giỏ hàng
+- Thêm món vào giỏ
+- Điều chỉnh số lượng
+- Thêm ghi chú cho từng món
 
-Quy trình đặt hàng: Tính toán tổng hóa đơn, tiến hành đặt hàng và lưu lại lịch sử.
+### Quy trình đặt hàng
+- Tính tổng hóa đơn
+- Đặt hàng
+- Lưu lịch sử đơn hàng
 
-Quản lý tài khoản: Người dùng có thể xem và chỉnh sửa thông tin cá nhân.
+### Quản lý tài khoản
+- Xem và sửa thông tin cá nhân
 
-Thanh toán: Tích hợp cổng thanh toán VNPay (trong backend).
+### Thanh toán
+- Tích hợp VNPay (ở backend)
 
-Công nghệ sử dụng
-Backend:
+---
 
-Nền tảng: Node.js
+## Công nghệ sử dụng
 
-Framework: Express.js
+### Backend
+- **Nền tảng**: Node.js
+- **Framework**: Express.js
+- **Cơ sở dữ liệu**: MySQL
+- **ORM**: Sequelize
+- **Xác thực**: JWT, bcryptjs
+- **Khác**: CORS, dotenv, moment, qs
 
-Cơ sở dữ liệu: MySQL
+### Android
+- **Ngôn ngữ**: Java
+- **Kiến trúc**: REST API Client
+- **Thư viện**: Retrofit, SessionManager
 
-ORM: Sequelize
+---
 
-Xác thực: JSON Web Token (JWT), bcryptjs
+## 📦 Cấu trúc thư mục
 
-Khác: CORS, Dotenv, Moment.js
+```
+fastfood-fullstack/
+├── android_fastfood_app/       # Mã nguồn ứng dụng Android (Java)
+│
+├── backend_fastfood_app/       # Máy chủ Node.js Express
+│   ├── config/                 # Cấu hình kết nối cơ sở dữ liệu (Sequelize)
+│   ├── controllers/           # Logic xử lý các API
+│   ├── models/                # Các mô hình dữ liệu Sequelize
+│   ├── routes/                # Định nghĩa route API
+│   ├── .env                   # Biến môi trường (tự tạo)
+│   └── index.js               # File chính chạy server
+```
 
-Android:
+---
 
-Ngôn ngữ: Java
+## ⚙️ Cài đặt và chạy dự án
 
-Kiến trúc: REST API Client
+### 1. Clone repository
 
-Thư viện: Retrofit (để gọi API), SessionManager (để quản lý phiên đăng nhập).
+```bash
+git clone -b final https://github.com/1usuzu/fastfood-fullstack.git
+cd fastfood-fullstack
+```
 
-Cài đặt và Chạy dự án
-Để chạy toàn bộ dự án, bạn cần cài đặt cả Backend và Frontend.
+---
 
-1. Clone Dự án
-Đầu tiên, clone nhánh final của repository về máy:
+### 2. Cài đặt Backend
 
-``git clone -b final https://github.com/1usuzu/fastfood-fullstack.git
-cd fastfood-fullstack``
+> Cần cài đặt trước Node.js và MySQL
 
-2. Cài đặt Backend (Node.js)
-Backend cần được chạy trước để Android có thể kết nối tới.
-
-Di chuyển vào thư mục backend:
-
-Bash
-
+```bash
 cd backend_fastfood_app
-Cài đặt các thư viện cần thiết:
+```
 
-Bash
-
+Cài đặt thư viện:
+```bash
 npm install express sequelize pg pg-hstore bcryptjs jsonwebtoken cors dotenv moment qs
-Thiết lập môi trường (.env):
-Tạo một file có tên .env trong thư mục backend_fastfood_app và điền các thông tin cần thiết.
+```
 
-Đoạn mã
+Tạo file `.env` và cấu hình như sau:
 
-# Chuỗi kết nối đến cơ sở dữ liệu PostgreSQL của bạn
-DATABASE_URL="postgres://USER:PASSWORD@HOST:PORT/DATABASE_NAME"
+```env
+DATABASE_URL=...
 
-# Thông tin VNPay (nếu có)
+# Thông tin VNPay
 VNP_TMNCODE=...
 VNP_HASHSECRET=...
 VNP_URL=...
 VNP_RETURNURL=...
-Chạy máy chủ:
+```
 
-Bash
-
+Chạy server:
+```bash
 node index.js
-Máy chủ sẽ bắt đầu chạy, thường là ở địa chỉ http://localhost:3000.
+```
 
-3. Cài đặt Frontend (Android)
-Mở project bằng Android Studio:
-Từ cửa sổ chào mừng của Android Studio, chọn "Open" và tìm đến thư mục android_fastfood_app trong repo bạn vừa clone.
+> ✅ Server chạy ở `http://localhost:3000`
 
-Chỉnh sửa địa chỉ IP của Backend:
-Mở file RetrofitClient.java và thay đổi BASE_URL để trỏ đến địa chỉ IP của máy tính đang chạy backend.
+---
 
-Nếu chạy trên máy ảo Android mặc định: IP 10.0.2.2 là alias cho localhost của máy tính.
+### 3. Cài đặt Frontend (Android)
 
-Nếu chạy trên thiết bị thật: Bạn cần tìm địa chỉ IP trong mạng LAN của máy tính (ví dụ: 192.168.1.5) và đảm bảo điện thoại và máy tính kết nối cùng một mạng Wi-Fi.
+> 📱 Cần cài Android Studio
 
-Java
+- Mở Android Studio → chọn "Open" → chọn thư mục `android_fastfood_app`
 
-// file: app/src/main/java/com/example/fastfood/RetrofitClient.java
+Cập nhật địa chỉ IP Backend:
+```java
+// File: app/src/main/java/com/example/fastfood/RetrofitClient.java
+private static final String BASE_URL = "http://10.0.2.2:3000/"; // Thay đổi IP nếu cần
+```
 
-private static final String BASE_URL = "http://10.0.2.2:3000/"; // Sửa IP nếu cần
-Build và Chạy ứng dụng:
-Nhấn nút Run 'app' trong Android Studio để build và cài đặt ứng dụng lên máy ảo hoặc thiết bị thật của bạn.
+- `10.0.2.2`: Dùng cho máy ảo Android
+- Dùng IP LAN thực tế cho thiết bị thật (ví dụ `192.168.1.x`)
 
-🏗️ Cấu trúc thư mục
-android_fastfood_app/: Chứa mã nguồn của ứng dụng Android.
+Chạy ứng dụng:
+- Nhấn nút **Run 'app'** trong Android Studio
 
-backend_fastfood_app/: Chứa mã nguồn của máy chủ Node.js.
+---
 
-index.js: File chính khởi động server.
+## 🔌 Các API chính
 
-config/: Cấu hình kết nối cơ sở dữ liệu (Sequelize).
-
-controllers/: Chứa logic xử lý cho các API endpoint.
-
-models/: Định nghĩa các model dữ liệu (User, Food, Order...).
-
-routes/: Định nghĩa các route (đường dẫn API).
-
-🔌 API Endpoints chính
-POST /register: Đăng ký tài khoản mới.
-
-POST /login: Đăng nhập và nhận về JWT token.
-
-GET /foods: Lấy danh sách tất cả món ăn.
-
-POST /foods: Thêm một món ăn mới (yêu cầu xác thực).
+| Phương thức | Endpoint      | Chức năng                    |
+|-------------|----------------|------------------------------|
+| POST        | `/register`    | Đăng ký tài khoản mới        |
+| POST        | `/login`       | Đăng nhập, nhận token JWT    |
+| GET         | `/foods`       | Lấy danh sách món ăn         |
+| POST        | `/foods`       | Thêm món mới (cần xác thực)  |
+| GET         | `/orders`      | Xem lịch sử đặt hàng         |
+| POST        | `/orders`      | Đặt hàng                     |
