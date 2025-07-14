@@ -56,15 +56,21 @@ Một ứng dụng đặt đồ ăn nhanh full-stack với frontend là ứng d�
 
 ```
 fastfood-fullstack/
-├── android_fastfood_app/       # Mã nguồn ứng dụng Android (Java)
-│
-├── backend_fastfood_app/       # Máy chủ Node.js Express
-│   ├── config/                 # Cấu hình kết nối cơ sở dữ liệu (Sequelize)
-│   ├── controllers/           # Logic xử lý các API
-│   ├── models/                # Các mô hình dữ liệu Sequelize
-│   ├── routes/                # Định nghĩa route API
-│   ├── .env                   # Biến môi trường (tự tạo)
-│   └── index.js               # File chính chạy server
+├── android_fastfood_app/                 # Mã nguồn ứng dụng Android (Java)
+│   ├── activity/                         # Các màn hình (Activity) chính
+│   ├── adapter/                          # Các lớp Adapter để hiển thị danh sách (RecyclerView Adapter)
+│   ├── fragment/                         # Các Fragment như trang chủ, giỏ hàng, chi tiết món ăn
+│   ├── data/                             # Dữ liệu và kết nối API
+│   │   ├── api/                          # Retrofit client và các interface để gọi API từ backend
+│   │   ├── local/                        # Lưu trữ dữ liệu cục bộ (SharedPreferences, SessionManager)
+│   │   ├── model/                        # Các lớp model biểu diễn dữ liệu như User, Food, Order
+├── backend_fastfood_app/                 # Máy chủ Node.js Express
+│   ├── config/                           # Cấu hình kết nối cơ sở dữ liệu (Sequelize)
+│   ├── controllers/                      # Logic xử lý các API
+│   ├── models/                           # Các mô hình dữ liệu Sequelize
+│   ├── routes/                           # Định nghĩa route API
+│   ├── .env                              # Biến môi trường (tự tạo)
+│   └── index.js                          # File chính chạy server
 ```
 
 ---
