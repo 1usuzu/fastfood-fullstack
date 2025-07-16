@@ -2,11 +2,7 @@ package com.example.fastfood.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,6 +19,7 @@ import com.example.fastfood.data.api.RetrofitClient;
 import com.example.fastfood.data.api.SessionManager;
 import com.example.fastfood.data.model.LoginRequest;
 import com.example.fastfood.data.model.LoginResponse;
+import com.example.fastfood.data.model.User; // **Quan trọng: Cần import lớp User**
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Kiểm tra xem người dùng đã đăng nhập từ trước chưa
         SessionManager sessionManager = new SessionManager(getApplicationContext());
         if (sessionManager.isLoggedIn()) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -49,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Ánh xạ các view
         cbRememberMe = findViewById(R.id.cb_remember_me);
         edtPhone = findViewById(R.id.edt_phone);
         edtPassword = findViewById(R.id.edt_password);
@@ -57,16 +56,19 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login_submit);
         TextView tvForgotPassword = findViewById(R.id.tv_forgot_password);
 
+        // Cài đặt các sự kiện click
         tvForgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent);
+            // (Bạn cần tạo ForgotPasswordActivity)
+             Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+             startActivity(intent);
         });
 
         ivBack.setOnClickListener(v -> finish());
 
         llGoToRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(intent);
+            // (Bạn cần tạo RegisterActivity)
+             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+             startActivity(intent);
         });
 
         btnLogin.setOnClickListener(v -> {
@@ -78,7 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            AuthAPI api = RetrofitClient.getRetrofit().create(AuthAPI.class);
+            // Gọi API đăng nhập
+            AuthAPI api = RetrofitClient.getAuthApi();
             LoginRequest loginRequest = new LoginRequest(phone, password);
 
             api.login(loginRequest).enqueue(new Callback<LoginResponse>() {
@@ -87,18 +90,41 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 
-                        String token = response.body().getToken();
+                        LoginResponse loginResponse = response.body();
+                        String token = loginResponse.getToken();
 
+                        // Lưu token nếu người dùng chọn "Ghi nhớ đăng nhập"
                         if (cbRememberMe.isChecked()) {
                             SessionManager sessionManager = new SessionManager(getApplicationContext());
                             sessionManager.createLoginSession(token);
                         }
 
+                        // **[PHẦN QUAN TRỌNG] Lưu thông tin người dùng vào SharedPreferences**
+                        // Giả sử LoginResponse của bạn có chứa một đối tượng User
+                        User loggedInUser = loginResponse.getUser();
+
+                        SharedPreferences prefs = getSharedPreferences("USER_PREFS", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        if (loggedInUser != null) {
+                            // THÊM DÒNG NÀY ĐỂ KIỂM TRA
+                            android.util.Log.d("LOGIN_DEBUG", "User ID lấy được: " + loggedInUser.getId());
+
+                            editor.putString("userId", loggedInUser.getId());
+                            editor.putString("userName", loggedInUser.getName());
+                            editor.putString("userPhone", loggedInUser.getPhone());
+                        } else {
+                            // THÊM DÒNG NÀY ĐỂ KIỂM TRA
+                            android.util.Log.d("LOGIN_DEBUG", "Đối tượng loggedInUser là null!");
+                        }
+
+                        editor.commit();
+
+                        // Chuyển sang màn hình chính
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Sai SĐT hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Sai số điện thoại hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                     }
                 }
 

@@ -1,84 +1,124 @@
 package com.example.fastfood.fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.fastfood.R;
-import com.example.fastfood.adapter.FoodAdapter;
+import com.example.fastfood.activity.CartActivity;
+import com.example.fastfood.adapter.OrderHistoryAdapter;
 import com.example.fastfood.data.api.FoodAPI;
 import com.example.fastfood.data.api.RetrofitClient;
-import com.example.fastfood.data.model.FoodModel;
+import com.example.fastfood.data.local.AppDatabase;
+import com.example.fastfood.data.local.CartItem;
+import com.example.fastfood.data.model.Order;
+import com.example.fastfood.data.model.OrderItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrderHistoryFragment extends Fragment {
+public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapter.OnReorderClickListener {
 
-    private RecyclerView recyclerViewFoods;
-    private FoodAdapter foodAdapter;
-    private List<FoodModel> foodModelList = new ArrayList<>();
-    private FoodAPI foodApi;
+    private RecyclerView rvOrderHistory;
+    private OrderHistoryAdapter adapter;
+    private List<Order> orderList = new ArrayList<>();
+    private AppDatabase database;
+    private final ExecutorService databaseExecutor = Executors.newSingleThreadExecutor();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_order_history, container, false); // Bạn nên tạo file XML tương ứng
+        View view = inflater.inflate(R.layout.fragment_order_history, container, false);
+
+        rvOrderHistory = view.findViewById(R.id.rv_order_history);
+        database = AppDatabase.getDatabase(getContext());
+
+        setupRecyclerView();
+        loadOrderHistory();
+        return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        recyclerViewFoods = view.findViewById(R.id.rv_order_history);
-        recyclerViewFoods.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        foodAdapter = new FoodAdapter(getContext(), foodModelList, null);
-        recyclerViewFoods.setAdapter(foodAdapter);
-
-        foodApi = RetrofitClient.getRetrofit().create(FoodAPI.class);
-        loadFoods();
+    private void setupRecyclerView() {
+        // Truyền "this" (tức là Fragment này) làm listener cho sự kiện click
+        adapter = new OrderHistoryAdapter(orderList, this);
+        rvOrderHistory.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvOrderHistory.setAdapter(adapter);
     }
 
-    private void loadFoods() {
-        Call<List<FoodModel>> call = foodApi.getFoods(); // hoặc gọi getOrderHistory() nếu có API riêng
-        call.enqueue(new Callback<List<FoodModel>>() {
+    private void loadOrderHistory() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+
+        if (userId == null) {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để xem lịch sử", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FoodAPI foodAPI = RetrofitClient.getApi();
+        foodAPI.getOrderHistory(userId).enqueue(new Callback<List<Order>>() {
             @Override
-            public void onResponse(Call<List<FoodModel>> call, Response<List<FoodModel>> response) {
+            public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    foodAdapter.updateData(response.body());
-                    Log.d("API_SUCCESS", "Đã tải " + response.body().size() + " món ăn.");
+                    orderList.clear();
+                    orderList.addAll(response.body());
+                    adapter.notifyDataSetChanged();
                 } else {
-                    String errorMessage = "Không tải được dữ liệu.";
-                    if (response.errorBody() != null) {
-                        try {
-                            errorMessage += " Lỗi: " + response.code() + " - " + response.errorBody().string();
-                        } catch (IOException e) {
-                            errorMessage += " [Lỗi đọc errorBody]";
-                        }
-                    }
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Không thể tải lịch sử đơn hàng", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<FoodModel>> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(Call<List<Order>> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
+        });
+    }
+
+    /**
+     * Hàm này được gọi từ Adapter khi người dùng nhấn nút "Đặt lại"
+     * @param order Đơn hàng cần đặt lại
+     */
+    @Override
+    public void onReorderClick(Order order) {
+        if (order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
+            Toast.makeText(getContext(), "Đơn hàng này không có sản phẩm để đặt lại.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Sử dụng Executor để thực hiện thao tác với database trên luồng nền
+        databaseExecutor.execute(() -> {
+            for (OrderItem item : order.getOrderItems()) {
+                CartItem cartItem = new CartItem();
+                cartItem.name = item.getFoodName();
+                cartItem.price = item.getPrice();
+                cartItem.quantity = item.getQuantity();
+                cartItem.imageUrl = item.getImageUrl();
+                // Bạn có thể cần thêm các trường khác nếu có, ví dụ như foodId, notes,...
+
+                database.cartDao().insert(cartItem);
+            }
+
+            // Sau khi thêm xong, chuyển sang màn hình giỏ hàng trên luồng chính (UI thread)
+            requireActivity().runOnUiThread(() -> {
+                Toast.makeText(getContext(), "Đã thêm các sản phẩm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), CartActivity.class);
+                startActivity(intent);
+            });
         });
     }
 }

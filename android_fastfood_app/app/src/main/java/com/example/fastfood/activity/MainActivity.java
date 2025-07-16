@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import com.example.fastfood.R;
 import com.example.fastfood.fragment.HomeFragment;
 import com.example.fastfood.fragment.OrderHistoryFragment;
+import com.example.fastfood.fragment.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.navigation_orders) {
                     selectedFragment = new OrderHistoryFragment();
                 } else if (itemId == R.id.navigation_settings) {
-                    // selectedFragment = new SettingsFragment();
+                     selectedFragment = new SettingFragment();
                 }
 
                 if (selectedFragment != null) {

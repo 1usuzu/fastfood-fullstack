@@ -14,7 +14,18 @@ const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
+  },  
+  email: {
+    type: DataTypes.STRING
+  },
+  address: {
+    type: DataTypes.STRING
+  },
+  // **DÒNG THÊM MỚI**
+  date: {
+    type: DataTypes.STRING 
   }
+  
 }, {
   tableName: 'users',
   timestamps: true

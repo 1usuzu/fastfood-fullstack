@@ -21,7 +21,6 @@
             android:id="@+id/image_category"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@mipmap/ic_launcher"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             android:scaleType="centerCrop"/>
 

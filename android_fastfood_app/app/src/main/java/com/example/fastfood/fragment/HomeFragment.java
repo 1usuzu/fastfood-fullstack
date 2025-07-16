@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements FoodAdapter.OnItemAddListe
         fabCart = view.findViewById(R.id.fab_cart);
         tvSeeMore = view.findViewById(R.id.tv_see_more);
 
-        foodApi = RetrofitClient.getRetrofit().create(FoodAPI.class); // Khởi tạo FoodAPI đúng chuẩn
+        foodApi = RetrofitClient.getApi(); // Khởi tạo FoodAPI đúng chuẩn
 
         setupRecyclerView();
         fetchData();
